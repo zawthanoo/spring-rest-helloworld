@@ -88,7 +88,6 @@
 				</executions>
 			</plugin>
 		</plugins>
-	</plugins>
 		<finalName>${project.artifactId}</finalName>
 	</build>
 </project>
