@@ -6,7 +6,6 @@ pipeline {
   }
   agent any
   stages {
-    
     stage('Cloning Git') {
       steps {
         git 'https://github.com/zawthanoo/spring-rest-helloworld.git'
@@ -15,12 +14,10 @@ pipeline {
 
     stage('Build Package') {
       steps {
-        withmaven(maven : 'maven_3.6.3') {
-          sh 'mvn package'
-        }
+          bat 'mvn package'
       }
     }
-
+    
     stage('Building image') {
       steps{
         script {
@@ -28,17 +25,7 @@ pipeline {
         }
       }
     }
-
-    stage('Test Mkdocs' ) {
-        agent {
-            docker { image 'zawthanoo/spring_jenkings:$BUILD_NUMBER' }
-        }
-        steps {
-            sh 'zawthanoo --version'
-        }
-    }
-
-
+    
     stage('Deploy Image') {
       steps{
         script {
@@ -48,10 +35,12 @@ pipeline {
         }
       }
     }
+    
     stage('Remove Unused docker image') {
       steps{
-        sh "docker rmi $registry:$BUILD_NUMBER"
+        bat "docker rmi $registry:$BUILD_NUMBER"
       }
     }
+    
   }
 }
