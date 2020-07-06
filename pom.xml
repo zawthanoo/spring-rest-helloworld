@@ -86,10 +86,6 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
 			</plugin>			
 		</plugins>
 		<finalName>${project.artifactId}</finalName>
