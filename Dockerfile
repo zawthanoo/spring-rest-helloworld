@@ -1,4 +1,5 @@
-FROM openjdk:8
+FROM anapsix/alpine-java:8
+RUN mkdir -p /usr/local/myapp
 EXPOSE 8080
-COPY /target/spring-rest-helloworld.jar spring-rest-helloworld.jar
-ENTRYPOINT ["java", "-jar", "spring-rest-helloworld.jar"]
+COPY /target/spring-rest-helloworld.jar /usr/local/myapp/spring-rest-helloworld.jar
+ENTRYPOINT ["java", "-jar", "/usr/local/myapp/spring-rest-helloworld.jar"]
