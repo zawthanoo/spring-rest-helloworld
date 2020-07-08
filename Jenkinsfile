@@ -24,40 +24,41 @@ pipeline {
 	      POM_VERSION = "${pom.version}"
 	    }
 	    script {
-	      GIT_COMMIT_SHORT = bat(script: "@git rev-parse --short HEAD", returnStdout: true).trim();
+	      GIT_COMMIT_SHORT = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim();
 	    }
       }
     }
     
     stage('Build Package') {
       steps {
-        bat 'mvn package'
+        sh 'mvn package'
       }
     }
     
-    stage('Building image') {
+    stage('Build Docker Image') {
       steps{
         script {
           dockerImage = docker.build registry + ":${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
-        }
-        echo "Build docker images is done. $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+          echo "Build docker images is done. $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+        }   
       }
     }
-    
+
     stage('Push Docker Image') {
       steps{
         script {
-          docker.withRegistry( '', registryCredential ) {
-            dockerImage.push("${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER")
+          docker.withRegistry( '', registryCredential ) {            
+            dockerImage.push()
+            echo "Push docker image into DockerHub. $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
           }
-        }
-         echo "Push docker image into DockerHub. $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+        }   
       }
     }
+        
     
     stage('Remove Unused docker image') {
       steps{
-        bat "docker rmi $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+        sh "docker rmi $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
       }
     }    
   }
