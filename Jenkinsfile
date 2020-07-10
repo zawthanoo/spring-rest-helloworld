@@ -4,7 +4,7 @@ def GIT_COMMIT_SHORT
 pipeline {
   environment {
     registry = "zawthanoo/spring-jenkins"
-    registryCredential = 'DockerHub_Credential'
+    registryCredential = 'zto-dockerhub'
     dockerImage = ''
   }
   
