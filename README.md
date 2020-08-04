@@ -1,4 +1,4 @@
-this project is testing for CI/DI pipeline for GIT-jeking-dockerhub.
+## This project is testing for CI/DI pipeline for github, jenkins and dockerhub
 
 JVM Memory Config & Run Commend
 --------------------------------
