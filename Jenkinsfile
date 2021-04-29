@@ -11,6 +11,7 @@ pipeline {
     agent none
 
     stages {
+	
         stage('Cloning Git') {
             steps {
                 git 'https://github.com/zawthanoo/spring-rest-helloworld.git'
@@ -28,46 +29,46 @@ pipeline {
                 }
             }
         }
-    }
 
-    stages('Build Package') {
-        agent {
-            docker {
-                image 'maven:3.8.1-adoptopenjdk-11'
-                args '-v /root/.m2:/root/.m2'
+        stage('Build Package') {
+            agent {
+                docker {
+                    image 'maven:3.8.1-adoptopenjdk-11'
+                    args '-v /root/.m2:/root/.m2'
+                }
             }
-        }
-        stage("build") {
-            steps {
-                sh 'mvn package'
-            }
-        }
-    }
-
-    stages('Build Docker') {
-        agent {
-            label 'docker'
-        }
-        stages {
-            stage('Build Docker Image') {
+            stage("build") {
                 steps {
-                    script {
-                        dockerImage = docker.build registry + ":${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
-                        echo "Build docker images is done. $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
-                    }
+                    sh 'mvn package'
                 }
             }
         }
 
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.withRegistry('', registryCredential) {
-                        dockerImage.push()
-                        echo "Push docker image into DockerHub. $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+        stage('Build Docker') {
+            agent {
+                label 'docker'
+            }
+			stages('Build Docker') {
+                stage('Build Docker Image') {
+                    steps {
+                        script {
+                            dockerImage = docker.build registry + ":${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+                            echo "Build docker images is done. $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+                        }
                     }
                 }
-            }
+
+				stage('Push Docker Image') {
+					steps {
+						script {
+							docker.withRegistry('', registryCredential) {
+								dockerImage.push()
+								echo "Push docker image into DockerHub. $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+							}
+						}
+					}
+				}
+			}
         }
     }
 }
