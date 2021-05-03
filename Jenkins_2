@@ -1,0 +1,49 @@
+def POM_VERSION
+def GIT_COMMIT_SHORT
+def registry = "zawthanoo/spring-rest-helloworld"
+def registryCredential = 'zto-dockerhub-credentials'
+def dockerImage = ''
+
+
+node {
+	stage('Initialize'){
+        def dockerHome = tool 'zto_docker'
+        def mavenHome  = tool 'zto_maven'
+        env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}"
+    }
+
+	
+	stage('Cloning Git') {
+			git 'https://github.com/zawthanoo/spring-rest-helloworld.git'
+	}
+
+	stage('Initialize the variables') {
+			script {
+				def pom = readMavenPom file: 'pom.xml'
+				POM_VERSION = "${pom.version}"
+			}
+			script {
+				GIT_COMMIT_SHORT = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim();
+			}
+	}
+
+	stage("maven build") {
+			sh 'mvn package'
+	}
+	
+	stage('Build Docker Image') {
+			script {
+				dockerImage = docker.build registry + ":${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+				echo "Build docker images is done. $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+			}
+	}
+
+	stage('Push Docker Image') {
+			script {
+				docker.withRegistry('', registryCredential) {
+					dockerImage.push()
+					echo "Push docker image into DockerHub. $registry:${POM_VERSION}-${GIT_COMMIT_SHORT}-$BUILD_NUMBER"
+				}
+			}
+	}
+}
