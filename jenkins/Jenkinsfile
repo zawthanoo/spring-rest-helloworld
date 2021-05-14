@@ -17,9 +17,12 @@ pipeline {
 	 stage('Initialize') {
       steps {
         script {
-          def dockerHome = tool 'zto_docker'
+          //def dockerHome = tool 'zto_docker'
+          //def mavenHome  = tool 'zto_maven'
+          //env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}" 
           def mavenHome  = tool 'zto_maven'
-          env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}" 
+          env.PATH = "${mavenHome}/bin:${env.PATH}" 
+
         }
       } 
   }
