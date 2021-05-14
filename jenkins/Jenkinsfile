@@ -47,7 +47,6 @@ pipeline {
     stage('Build Package') {
       steps {
         script {
-          sh "mvn versions:set -DnewVersion=${DOCKER_TAB_VERSION}"
           sh "mvn package"
 	      }
       }
