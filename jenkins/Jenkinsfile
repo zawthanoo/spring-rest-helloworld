@@ -17,12 +17,9 @@ pipeline {
 	 stage('Initialize') {
       steps {
         script {
-          //def dockerHome = tool 'zto_docker'
-          //def mavenHome  = tool 'zto_maven'
-          //env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}" 
+          def dockerHome = tool 'zto_docker'
           def mavenHome  = tool 'zto_maven'
-          env.PATH = "${mavenHome}/bin:${env.PATH}" 
-
+          env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}" 
         }
       } 
   }
@@ -53,10 +50,6 @@ pipeline {
           sh "mvn dependency:go-offline"
           sh "mvn versions:set -DnewVersion=${DOCKER_TAB_VERSION}"
           sh "mvn clean package"
-          sh '''#!/bin/bash
-                 cd target
-                 ls -la
-          '''
 	      }
       }
     }
@@ -64,11 +57,10 @@ pipeline {
     stage('Build Docker Image') {
       steps{
         script {
-          //sh "cp target/*.jar jenkins/apps/"
-          //sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
-          //echo "$DOCKER_REPO/${ARTIFACT_ID}:${DOCKER_TAB_VERSION}"
-          //sh "docker build -t $DOCKER_REPO/${ARTIFACT_ID}:${DOCKER_TAB_VERSION} jenkins"
-          //sh "docker push $DOCKER_REPO/${ARTIFACT_ID}:${DOCKER_TAB_VERSION}"
+          sh "cp target/*.jar jenkins/apps/"
+          sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
+          sh "docker build -t $DOCKER_REPO/${ARTIFACT_ID}:${DOCKER_TAB_VERSION} jenkins"
+          sh "docker push $DOCKER_REPO/${ARTIFACT_ID}:${DOCKER_TAB_VERSION}"
           echo "Build docker images is done. ${ARTIFACT_ID}:${DOCKER_TAB_VERSION}"
         }   
       }
