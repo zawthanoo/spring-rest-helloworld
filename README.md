@@ -13,6 +13,7 @@ Custom Jenkins_Dockerfile + docker-ce
 ----------------------------
 ```Dockerfile
 FROM jenkins/jenkins
+LABEL maintainer="zawthanoo.1986@gmail.com"
 USER root
 RUN apt-get update && \
 apt-get -y install apt-transport-https \
@@ -25,15 +26,15 @@ add-apt-repository \
     "deb [arch=amd64] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
     $(lsb_release -cs) \
     stable" && \
-apt-get update && \
-apt-get -y install docker-ce
-RUN apt-get install -y docker-ce
-RUN usermod -a -G docker jenkins
+apt-get update 
+RUN apt-get install -y docker.io
 RUN mkdir /var/log/jenkins
 RUN mkdir /var/cache/jenkins
 RUN chown -R jenkins:jenkins /var/log/jenkins
 RUN chown -R jenkins:jenkins /var/cache/jenkins
-USER jenkins
+ 
+ENV JAVA_OPTS="-Xmx4096m"
+ENV JENKINS_OPTS="--handlerCountMax=300 --logfile=/var/log/jenkins/jenkins.log --webroot=/var/cache/jenkins/war"
 ```
 Run Custom Jenkins Container
 --------------------------------
