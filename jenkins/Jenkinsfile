@@ -56,7 +56,7 @@ pipeline {
       steps{
         script {
           sh "cp target/*.jar jenkins/apps/"
-          sh "docker login -u $DOCKER_USER -p $DOCKER_PASS"
+          sh "docker login -u $DOCKER_USER -p '$DOCKER_PASS'"
           sh "docker build -t $DOCKER_REPO/${ARTIFACT_ID}:${DOCKER_TAB_VERSION} jenkins"
           sh "docker push $DOCKER_REPO/${ARTIFACT_ID}:${DOCKER_TAB_VERSION}"
           echo "Build docker images is done. ${ARTIFACT_ID}:${DOCKER_TAB_VERSION}"
