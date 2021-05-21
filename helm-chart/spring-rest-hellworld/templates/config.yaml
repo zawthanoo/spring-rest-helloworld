@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "spring-rest-hellworld.fullname" . }}-config
+  labels:
+    {{- include "spring-rest-hellworld.labels" . | nindent 4 }}
+data:
+  MAX_JVM_MEMORY: {{ .Values.config.maxJvmMem | quote }}
+  MIN_JVM_MEMORY: {{ .Values.config.minJvmMem | quote }}
+  JVM_MEMORY_NEW_RATIO: {{ .Values.config.jvmMemoryNewRatio | quote }}
+  MVM_MEMORY_SURVIVOR_RATIO: {{ .Values.config.jvmMemorySurvivorRatio | quote }}
+  {{ .Values.app.config.subPath | quote }}: |
+    server:
+      port: {{ .Values.config.httpPort | quote }}
+      servlet:
+        contextPath: {{ .Values.config.contextPath | quote }}

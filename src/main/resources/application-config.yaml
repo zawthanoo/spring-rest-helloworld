@@ -1,4 +1,4 @@
 server:
   port: 8082
   servlet:
-    contextPath: /myapp
+    contextPath: /spring-rest-hellworld

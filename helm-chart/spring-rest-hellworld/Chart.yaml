@@ -1,0 +1,8 @@
+apiVersion: v2
+name: spring-rest-hellworld
+description: A Helm chart for Kubernetes
+version: 0.1.0
+maintainers:
+  - name: Zaw Than Oo
+    email: zawthanoo@wavemoney.com.mm
+
