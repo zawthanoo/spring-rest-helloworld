@@ -63,7 +63,7 @@ app:
     mountPath: /opt/spring/config/application-config-override.yaml
     subPath: application-config-override.yaml
   secret:
-    mountPath: /opt/spring/config/application-secret-override.yaml
+    mountPath: /opt/spring/secret/application-secret-override.yaml
     subPath: application-secret-override.yaml
 
 podAnnotations: {}
