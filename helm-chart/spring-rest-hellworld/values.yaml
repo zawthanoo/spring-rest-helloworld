@@ -35,15 +35,15 @@ service:
     
 livenessProbe:
   httpGet:
-    path: /spring-k8s
-    port: 8080
+    path: /spring-rest-hellworld
+    port: 8082
   initialDelaySeconds: 10
   periodSeconds: 5
 
 readinessProbe:
   httpGet:
-    path: /spring-k8s
-    port: 8080
+    path: /spring-rest-hellworld
+    port: 8082
   initialDelaySeconds: 10
   periodSeconds: 5
 
