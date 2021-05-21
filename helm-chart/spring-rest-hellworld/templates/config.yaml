@@ -9,7 +9,7 @@ data:
   MIN_JVM_MEMORY: {{ .Values.config.minJvmMem | quote }}
   JVM_MEMORY_NEW_RATIO: {{ .Values.config.jvmMemoryNewRatio | quote }}
   MVM_MEMORY_SURVIVOR_RATIO: {{ .Values.config.jvmMemorySurvivorRatio | quote }}
-  {{ .Values.app.config.subPath | quote }}: |
+  application-config-override.yaml: |
     server:
       port: {{ .Values.config.httpPort | quote }}
       servlet:
