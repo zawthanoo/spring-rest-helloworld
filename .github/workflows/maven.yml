@@ -25,7 +25,7 @@ jobs:
       id: pom-version
 
     - name: Bild docker tag version
-      run: echo ${{ steps.pom-version.outputs.version }}-${{github.run_number}}-${GITHUB_SHA::7}
+      run: echo ::set-output name=version::$(echo ${{ steps.pom-version.outputs.version }}-${{github.run_number}}-${GITHUB_SHA::7})
       id: tag-version
     
     - name: Build with Maven
