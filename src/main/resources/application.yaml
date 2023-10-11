@@ -1,0 +1,7 @@
+server:
+  port: 8082
+  servlet:
+    contextPath: /spring-rest-hellworld
+mysql:
+  username: root
+  password: root
