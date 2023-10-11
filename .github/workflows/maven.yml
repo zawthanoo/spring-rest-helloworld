@@ -19,7 +19,15 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+    
+    - name: Extract Maven project version
+      run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+      id: pom-version
 
+    - name: Bild docker tag version
+      run: echo ${{ steps.pom-version.outputs.version }}-${{github.run_number}}-${SHORT_SHA}
+      id: tag-version
+    
     - name: Build with Maven
       run: mvn clean install
     
@@ -34,4 +42,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: zawthanoo/spring-rest-helloworld:latest
+        tags: zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
