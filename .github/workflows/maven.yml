@@ -50,7 +50,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
+        tags: ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
     # - uses: docker/build-push-action@v5
     # - name: Build Image and push
     #   run: |
