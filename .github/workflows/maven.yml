@@ -56,34 +56,43 @@ jobs:
     #     context: .
     #     push: true
     #     tags: zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}        
-
-    - uses: actions/checkout@v2 
-    - name: Deploy in K8S-EC2
+    - name: Deploy to AWS Server
+      uses: appleboy/ssh-action@v1.0.0
       env:
-        PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
-        HOSTNAME : ${{ secrets.AWS_K8S_HOSTNAME  }}
-        USER_NAME : ${{ secrets.AWS_K8S_USER_NAME  }}
-        GIT_USERNAME: ${{ github.actor }}
-        GIT_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-        # NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
-        NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:123456 
+        SSH_PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
+        REMOTE_HOST: ${{ secrets.AWS_K8S_HOSTNAME }}
+        REMOTE_USER: ${{ secrets.AWS_K8S_USER_NAME }}
+        NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:123456
+        script: |
+          echo "new docker image ${NEW_DOCKER_IMAGE}"
+           
+    # - uses: actions/checkout@v2 
+    # - name: Deploy in K8S-EC2
+    #   env:
+    #     PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+    #     HOSTNAME : ${{ secrets.AWS_K8S_HOSTNAME  }}
+    #     USER_NAME : ${{ secrets.AWS_K8S_USER_NAME  }}
+    #     GIT_USERNAME: ${{ github.actor }}
+    #     GIT_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+    #     # NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
+    #     NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:123456 
                   
-      run: |
-        echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-        echo "new docker image ${NEW_DOCKER_IMAGE}"
-        # rm -rf spring-rest-helloworld-deployment
-        # git clone https://zawthanoo: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@github.com/zawthanoo/spring-rest-helloworld-deployment.git
-        # cd spring-rest-helloworld-deployment
-        # ls -la
-        # yq eval ".spec.template.spec.containers.[0].image = \"${NEW_DOCKER_IMAGE}\"" -i deployment.yaml
-        # cat deployment.yaml
-        # kubectl apply -f config.yaml -n sit
-        # echo "config-map is created"
-        # kubectl apply -f secret.yaml -n sit
-        # echo "secrect is created"
-        # kubectl apply -f deployment.yaml -n sit
-        # echo "deployment is created"
-        # kubectl apply -f service.yaml -n sit
-        # echo "service is created"
-        '
+    #   run: |
+    #     echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+    #     ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+    #     echo "new docker image ${NEW_DOCKER_IMAGE}"
+    #     rm -rf spring-rest-helloworld-deployment
+    #     git clone https://zawthanoo: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@github.com/zawthanoo/spring-rest-helloworld-deployment.git
+    #     cd spring-rest-helloworld-deployment
+    #     ls -la
+    #     yq eval ".spec.template.spec.containers.[0].image = \"${NEW_DOCKER_IMAGE}\"" -i deployment.yaml
+    #     cat deployment.yaml
+    #     kubectl apply -f config.yaml -n sit
+    #     echo "config-map is created"
+    #     kubectl apply -f secret.yaml -n sit
+    #     echo "secrect is created"
+    #     kubectl apply -f deployment.yaml -n sit
+    #     echo "deployment is created"
+    #     kubectl apply -f service.yaml -n sit
+    #     echo "service is created"
+    #     '
