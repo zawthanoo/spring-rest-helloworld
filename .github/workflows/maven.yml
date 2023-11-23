@@ -67,5 +67,6 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
-        cd /home/ubuntu/cici/
+        git clone https://zawthanoo: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@github.com/zawthanoo/spring-rest-helloworld.git
+        cd spring-rest-helloworld
         ls -la
