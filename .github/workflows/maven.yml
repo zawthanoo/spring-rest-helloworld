@@ -68,7 +68,7 @@ jobs:
         script: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
-          echo "new docker image ${NEW_DOCKER_IMAGE}"
+          echo "new docker image $NEW_DOCKER_IMAGE"
            
     # - uses: actions/checkout@v2 
     # - name: Deploy in K8S-EC2
