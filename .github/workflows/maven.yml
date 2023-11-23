@@ -24,26 +24,26 @@ jobs:
       run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
       id: pom-version
 
-    - name: Bild docker tag version
+    - name: Bild tag version
       run: echo ::set-output name=version::$(echo ${{ steps.pom-version.outputs.version }}-${{github.run_number}}-${GITHUB_SHA::7})
       id: tag-version
     
-    # - name: Build with Maven
-    #   run: mvn clean install
+    - name: Maven build
+      run: mvn clean install
             
-    # - name: Login to ghcr.io
-    #   uses: docker/login-action@v3
-    #   with:
-    #     registry: ghcr.io
-    #     username: ${{ github.actor }}
-    #     password: ${{ secrets.MY_GITHUB_TOKEN }}        
+    - name: Login to ghcr.io
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.MY_GITHUB_TOKEN }}        
         
-    # - name: Build and Push
-    #   uses: docker/build-push-action@v5
-    #   with:
-    #     context: .
-    #     push: true
-    #     tags: ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
+    - name: Build and Push Image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
 
     # - name: Login to Docker Hub
     #   uses: docker/login-action@v3
@@ -56,8 +56,9 @@ jobs:
     #   with:
     #     context: .
     #     push: true
-    #     tags: zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}        
-    - name: Deploy to AWS Server
+    #     tags: zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
+    
+    - name: Deploy
       uses: appleboy/ssh-action@v1.0.0
       env:
         GIT_USER: ${{ github.actor }}
@@ -69,9 +70,13 @@ jobs:
         key: ${{ secrets.AWS_PRIVATE_KEY }}      
         envs: GIT_USER, GIT_TOKEN, NEW_DOCKER_IMAGE
         script: |
-          echo "new docker image $GIT_USER $GIT_TOKEN $NEW_DOCKER_IMAGE"
-          kubectl get pod --all-namespaces
-           
+          echo "New docker image $NEW_DOCKER_IMAGE"
+          rm -rf spring-rest-helloworld-deployment
+          git clone https://$GIT_USER:$GIT_TOKEN@github.com/zawthanoo/spring-rest-helloworld-deployment.git
+          cd spring-rest-helloworld-deployment
+          yq eval ".spec.template.spec.containers.[0].image = \"${NEW_DOCKER_IMAGE}\"" -i deployment.yaml
+          cat deployment.yaml
+          
     # - uses: actions/checkout@v2 
     # - name: Deploy in K8S-EC2
     #   env:
