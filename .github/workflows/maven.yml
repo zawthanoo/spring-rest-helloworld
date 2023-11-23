@@ -64,6 +64,8 @@ jobs:
         REMOTE_USER: ${{ secrets.AWS_K8S_USER_NAME }}
         NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:123456
         script: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
           echo "new docker image ${NEW_DOCKER_IMAGE}"
            
     # - uses: actions/checkout@v2 
