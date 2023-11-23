@@ -59,10 +59,12 @@ jobs:
     - name: Deploy to AWS Server
       uses: appleboy/ssh-action@v1.0.0
       env:
-        SSH_PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY }}
-        REMOTE_HOST: ${{ secrets.AWS_K8S_HOSTNAME }}
-        REMOTE_USER: ${{ secrets.AWS_K8S_USER_NAME }}
         NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:123456
+      with:
+        host: ${{ secrets.AWS_K8S_HOSTNAME }}
+        username: ${{ secrets.AWS_K8S_USER_NAME }}
+        key: ${{ secrets.AWS_PRIVATE_KEY }}      
+        envs: NEW_DOCKER_IMAGE
         script: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
