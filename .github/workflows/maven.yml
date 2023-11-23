@@ -64,11 +64,14 @@ jobs:
         HOSTNAME : ${{ secrets.AWS_K8S_HOSTNAME  }}
         USER_NAME : ${{ secrets.AWS_K8S_USER_NAME  }}
         GIT_USERNAME: ${{ github.actor }}
-        GIT_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}        
+        GIT_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+        NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
           
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
+        rm -rf spring-rest-helloworld-deployment
         git clone https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/zawthanoo/spring-rest-helloworld-deployment.git
         cd spring-rest-helloworld-deployment
-        cat deploy.yaml
+        yq '.spec.template.spec.containers.[0].image = ${NEW_DOCKER_IMAGE}' deployment.yaml
+        cat deployment.yaml
