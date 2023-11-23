@@ -75,8 +75,13 @@ jobs:
         cd spring-rest-helloworld-deployment
         ls -la
         yq eval ".spec.template.spec.containers.[0].image = \"${NEW_DOCKER_IMAGE}\"" -i deployment.yaml
+        cat deployment.yaml
         kubectl apply -f config.yaml -n sit
+        echo "config-map is created"
         kubectl apply -f secret.yaml -n sit
+        echo "secrect is created"
         kubectl apply -f deployment.yaml -n sit
+        echo "deployment is created"
         kubectl apply -f service.yaml -n sit
+        echo "service is created"
         '
