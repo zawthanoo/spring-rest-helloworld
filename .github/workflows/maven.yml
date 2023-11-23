@@ -75,7 +75,10 @@ jobs:
           git clone https://$GIT_USER:$GIT_TOKEN@github.com/zawthanoo/spring-rest-helloworld-deployment.git
           cd spring-rest-helloworld-deployment
           yq eval ".spec.template.spec.containers.[0].image = \"${NEW_DOCKER_IMAGE}\"" -i deployment.yaml
-          cat deployment.yaml
+          kubectl apply -f config.yaml -n sit
+          kubectl apply -f secret.yaml -n sit
+          kubectl apply -f deployment.yaml -n sit
+          kubectl apply -f service.yaml -n sit
           
     # - uses: actions/checkout@v2 
     # - name: Deploy in K8S-EC2
