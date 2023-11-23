@@ -75,7 +75,10 @@ jobs:
         # cd spring-rest-helloworld-deployment
         # ls -la
         # yq eval ".spec.template.spec.containers.[0].image = \"${NEW_DOCKER_IMAGE}\"" -i deployment.yaml
-        microk8s kubectl version
+        sudo usermod -a -G microk8s $USER
+        sudo chown -R $USER ~/.kube
+        sudo newgrp microk8s
+        microk8s kubectl get namespaces
         # microk8s kubectl apply -f config.yaml -n sit
         # microk8s kubectl apply -f secret.yaml -n sit
         # microk8s kubectl apply -f deployment.yaml -n sit
