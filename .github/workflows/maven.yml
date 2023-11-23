@@ -12,38 +12,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
+    # - uses: actions/checkout@v3
+    # - name: Set up JDK 17
+    #   uses: actions/setup-java@v3
+    #   with:
+    #     java-version: '17'
+    #     distribution: 'temurin'
+    #     cache: maven
     
-    - name: Extract Maven project version
-      run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
-      id: pom-version
+    # - name: Extract Maven project version
+    #   run: echo ::set-output name=version::$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+    #   id: pom-version
 
-    - name: Bild docker tag version
-      run: echo ::set-output name=version::$(echo ${{ steps.pom-version.outputs.version }}-${{github.run_number}}-${GITHUB_SHA::7})
-      id: tag-version
+    # - name: Bild docker tag version
+    #   run: echo ::set-output name=version::$(echo ${{ steps.pom-version.outputs.version }}-${{github.run_number}}-${GITHUB_SHA::7})
+    #   id: tag-version
     
-    - name: Build with Maven
-      run: mvn clean install
+    # - name: Build with Maven
+    #   run: mvn clean install
             
-    - name: Login to ghcr.io
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.MY_GITHUB_TOKEN }}        
+    # - name: Login to ghcr.io
+    #   uses: docker/login-action@v3
+    #   with:
+    #     registry: ghcr.io
+    #     username: ${{ github.actor }}
+    #     password: ${{ secrets.MY_GITHUB_TOKEN }}        
         
-    - name: Build and Push
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        push: true
-        tags: ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
+    # - name: Build and Push
+    #   uses: docker/build-push-action@v5
+    #   with:
+    #     context: .
+    #     push: true
+    #     tags: ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
 
     # - name: Login to Docker Hub
     #   uses: docker/login-action@v3
@@ -65,23 +65,25 @@ jobs:
         USER_NAME : ${{ secrets.AWS_K8S_USER_NAME  }}
         GIT_USERNAME: ${{ github.actor }}
         GIT_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-        NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
-          
+        # NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}
+        NEW_DOCKER_IMAGE: ghcr.io/zawthanoo/spring-rest-helloworld:123456 
+                  
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-        rm -rf spring-rest-helloworld-deployment
-        git clone https://zawthanoo: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@github.com/zawthanoo/spring-rest-helloworld-deployment.git
-        cd spring-rest-helloworld-deployment
-        ls -la
-        yq eval ".spec.template.spec.containers.[0].image = \"${NEW_DOCKER_IMAGE}\"" -i deployment.yaml
-        cat deployment.yaml
-        kubectl apply -f config.yaml -n sit
-        echo "config-map is created"
-        kubectl apply -f secret.yaml -n sit
-        echo "secrect is created"
-        kubectl apply -f deployment.yaml -n sit
-        echo "deployment is created"
-        kubectl apply -f service.yaml -n sit
-        echo "service is created"
+        echo "new docker image ${NEW_DOCKER_IMAGE}"
+        # rm -rf spring-rest-helloworld-deployment
+        # git clone https://zawthanoo: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@github.com/zawthanoo/spring-rest-helloworld-deployment.git
+        # cd spring-rest-helloworld-deployment
+        # ls -la
+        # yq eval ".spec.template.spec.containers.[0].image = \"${NEW_DOCKER_IMAGE}\"" -i deployment.yaml
+        # cat deployment.yaml
+        # kubectl apply -f config.yaml -n sit
+        # echo "config-map is created"
+        # kubectl apply -f secret.yaml -n sit
+        # echo "secrect is created"
+        # kubectl apply -f deployment.yaml -n sit
+        # echo "deployment is created"
+        # kubectl apply -f service.yaml -n sit
+        # echo "service is created"
         '
