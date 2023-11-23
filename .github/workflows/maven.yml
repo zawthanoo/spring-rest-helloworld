@@ -73,5 +73,6 @@ jobs:
         rm -rf spring-rest-helloworld-deployment
         git clone https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/zawthanoo/spring-rest-helloworld-deployment.git
         cd spring-rest-helloworld-deployment
-        yq .spec.template.spec.containers.[0].image = ${NEW_DOCKER_IMAGE} deployment.yaml
+        ls -la
+        yq eval ".spec.template.spec.containers.[0].image = \"${NEW_DOCKER_IMAGE}\"" -i deployment.yaml
         cat deployment.yaml
