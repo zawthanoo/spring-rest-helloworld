@@ -69,8 +69,7 @@ jobs:
           
       run: |
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-        #ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
-        ssh -i private_key ${USER_NAME}@${HOSTNAME}
+        ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}
         # rm -rf spring-rest-helloworld-deployment
         # git clone https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/zawthanoo/spring-rest-helloworld-deployment.git
         # cd spring-rest-helloworld-deployment
