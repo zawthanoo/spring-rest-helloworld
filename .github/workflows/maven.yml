@@ -71,7 +71,7 @@ jobs:
         echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
         ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
         rm -rf spring-rest-helloworld-deployment
-        git clone https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/zawthanoo/spring-rest-helloworld-deployment.git
+        git clone https://zawthanoo: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@github.com/zawthanoo/spring-rest-helloworld-deployment.git
         cd spring-rest-helloworld-deployment
         ls -la
         yq eval ".spec.template.spec.containers.[0].image = \"${NEW_DOCKER_IMAGE}\"" -i deployment.yaml
