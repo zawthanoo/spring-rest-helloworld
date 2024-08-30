@@ -1,4 +1,4 @@
-## This project is testing for CI/DI pipeline for github, jenkins and dockerhub
+## Springboot Rest API Test Project
 
 JVM Memory Config & Run Commend
 --------------------------------
