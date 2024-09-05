@@ -65,5 +65,5 @@ jobs:
           workDir: temp_workspace
           changes: |
             {
-              "images[0].newTag": "ghcr.io/zawthanoo/spring-rest-helloworld:${{ steps.tag-version.outputs.version }}"
+              "images[0].newTag": "${{ steps.tag-version.outputs.version }}"
             }
