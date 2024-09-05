@@ -1,4 +1,4 @@
-FROM openjdk:17.0.2-jdk
+FROM openjdk:21-jdk
 ENV TZ="Asia/Singapore"
 RUN mkdir -p /opt/mutu/config 
 ADD target/spring-rest-helloworld.jar /opt/mutu/
