@@ -1,4 +1,4 @@
-## Springboot Rest API Test Project
+## Springboot Rest API
 
 JVM Memory Config & Run Commend
 --------------------------------
